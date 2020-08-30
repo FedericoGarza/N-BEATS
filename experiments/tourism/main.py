@@ -43,8 +43,9 @@ class TourismExperiment(Experiment):
                  loss: str,
                  history_size: Dict[str, float],
                  iterations: Dict[str, int],
-                 model_type: str):
-        dataset = TourismDataset.load(training=True)
+                 model_type: str,
+                 validation: bool):
+        dataset = TourismDataset.load(training=True, validation=validation)
 
         forecasts = []
         for seasonal_pattern in TourismMeta.seasonal_patterns:
