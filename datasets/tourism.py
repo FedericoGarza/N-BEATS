@@ -57,7 +57,7 @@ class TourismDataset:
     values: np.ndarray
 
     @staticmethod
-    def load(training: bool = True) -> 'TourismDataset':
+    def load(training: bool = True, validation: bool = True) -> 'TourismDataset':
         """
         Load Tourism dataset from cache.
 
@@ -94,9 +94,17 @@ class TourismDataset:
             if training:
                 dataset = train
             else:
-                dataset = test
+                if validation:
+                    dataset = train
+                else:
+                    dataset = test
 
-            values.extend([ts[:ts_length] for ts, ts_length in zip(dataset.values, meta_length)])
+            if validation and training:
+                values.extend([ts[:ts_length - h] for ts, ts_length, h in zip(dataset.values, meta_length, horizons)])
+            elif validation:
+                values.extend([ts[ts_length - h:ts_length] for ts, ts_length, h in zip(dataset.values, meta_length, horizons)])
+            else:
+                values.extend([ts[:ts_length] for ts, ts_length in zip(dataset.values, meta_length)])
 
         return TourismDataset(ids=np.array(ids),
                               groups=np.array(groups),
