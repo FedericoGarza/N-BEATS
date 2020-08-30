@@ -1,5 +1,5 @@
 build.experiment_name='tourism_interpretable'
-build.validation=True
+build.validation=[True, False]
 
 instance.model_type = 'interpretable'
 
