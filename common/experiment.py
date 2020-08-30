@@ -59,13 +59,14 @@ class Experiment(ABC):
     @gin.configurable()
     def build(self,
               experiment_name: str,
+              validation: bool,
               repeats: int,
               lookbacks: List[int],
               losses: List[str]):
         # create experiment instance(s)
         logging.info('Creating experiment instances ...')
         experiment_path = os.path.join(EXPERIMENTS_PATH, experiment_name)
-        ensemble_variables = [list(range(repeats)), lookbacks, losses]
+        ensemble_variables = [[validation], list(range(repeats)), lookbacks, losses]
         variable_names = ['repeat', 'lookback', 'loss']
         for instance_values in tqdm(product(*ensemble_variables)):
             instance_variables = dict(zip(variable_names, instance_values))
