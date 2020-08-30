@@ -67,7 +67,7 @@ class Experiment(ABC):
         logging.info('Creating experiment instances ...')
         experiment_path = os.path.join(EXPERIMENTS_PATH, experiment_name)
         ensemble_variables = [[validation], list(range(repeats)), lookbacks, losses]
-        variable_names = ['repeat', 'lookback', 'loss']
+        variable_names = ['validation', 'repeat', 'lookback', 'loss']
         for instance_values in tqdm(product(*ensemble_variables)):
             instance_variables = dict(zip(variable_names, instance_values))
             instance_name = ','.join(['%s=%.4g' % (name, value) if isinstance(value, float) \
