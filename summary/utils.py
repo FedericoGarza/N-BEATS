@@ -50,3 +50,28 @@ def group_values(values: np.ndarray, groups: np.ndarray, group_name: str) -> np.
     :return: Filtered and cleaned timeseries.
     """
     return np.array([v[~np.isnan(v)] for v in values[groups == group_name]])
+
+def median_ensemble_predictions(experiment_path: str,
+                                summary_filter: str = '**',
+                                forecast_file: str = 'forecast.csv',
+                                group_by: str = 'id',
+                                y_hat_col: str = 'y_hat'):
+    """
+    Build a median ensemble from files found in the experiment path.
+
+    :param experiment_path: Experiment path.
+    :param summary_filter: Filter which experiment instances should be included in ensemble.
+    :param forecast_file: Name of the file with results.
+    :param group_by: Grouping key.
+    :return: Pandas dataframe with median forecasts.
+    """
+    df = pd.concat([pd.read_csv(file)
+                      for file in
+                      tqdm(glob(os.path.join(experiment_path, summary_filter, forecast_file)))], sort=False) \
+        .set_index(group_by).groupby(level=group_by, sort=False).median()
+
+    df = df.stack().rename(y_hat_col).reset_index().rename({'id': 'unique_id'}, axis=1).drop('level_1', 1)
+    df['unique_id'] = df['unique_id'].str.upper()
+    df['ds'] = df.groupby('unique_id').transform(lambda x: np.arange(len(x)) + 1)
+
+    return df
