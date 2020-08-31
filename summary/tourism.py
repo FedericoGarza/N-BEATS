@@ -26,8 +26,8 @@ from summary.utils import group_values
 
 class TourismSummary:
 
-    def __init__(self):
-        self.test_set = TourismDataset.load(training=False)
+    def __init__(self, validation=True):
+        self.test_set = TourismDataset.load(training=False, validation=validation)
 
     def evaluate(self, forecast: np.ndarray) -> Dict[str, float]:
         """
