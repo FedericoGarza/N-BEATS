@@ -43,8 +43,9 @@ class M3Experiment(Experiment):
                  loss: str,
                  history_size: Dict[str, int],
                  iterations: Dict[str, int],
-                 model_type: str):
-        dataset = M3Dataset.load(training=True)
+                 model_type: str,
+                 validation: bool):
+        dataset = M3Dataset.load(training=True, validation=validation)
 
         forecasts = []
         for seasonal_pattern in M3Meta.seasonal_patterns:

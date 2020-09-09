@@ -1,4 +1,5 @@
 build.experiment_name='m3_interpretable'
+build.validation=[True, False]
 
 instance.model_type = 'interpretable'
 

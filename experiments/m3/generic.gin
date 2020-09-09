@@ -1,4 +1,5 @@
 build.experiment_name='m3_generic'
+build.validation=[True, False]
 
 instance.model_type = 'generic'
 
