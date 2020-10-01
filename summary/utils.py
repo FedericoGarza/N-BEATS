@@ -71,7 +71,6 @@ def median_ensemble_predictions(experiment_path: str,
         .set_index(group_by).groupby(level=group_by, sort=False).median()
 
     df = df.stack().rename(y_hat_col).reset_index().rename({'id': 'unique_id'}, axis=1).drop('level_1', 1)
-    df['unique_id'] = df['unique_id'].str.upper()
-    df['ds'] = df.groupby('unique_id').transform(lambda x: np.arange(len(x)) + 1)
+    df['ds'] = df.groupby('unique_id').cumcount() + 1
 
     return df

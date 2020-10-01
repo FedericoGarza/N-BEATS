@@ -74,8 +74,9 @@ class TourismDataset:
                                 header=0, delimiter=",")
             test = pd.read_csv(os.path.join(DATASET_PATH, f'{group.lower()}_oos.csv'),
                                header=0, delimiter=",")
-
-            horizons.extend(list(test.iloc[0].astype(int)))
+            
+            group_horizons = list(test.iloc[0].astype(int)) 
+            horizons.extend(group_horizons)
             groups.extend([group] * len(train.columns))
 
             if group == 'Yearly':
@@ -100,9 +101,9 @@ class TourismDataset:
                     dataset = test
 
             if validation and training:
-                values.extend([ts[:ts_length - h] for ts, ts_length, h in zip(dataset.values, meta_length, horizons)])
+                values.extend([ts[:ts_length - h] for ts, ts_length, h in zip(dataset.values, meta_length, group_horizons)])
             elif validation:
-                values.extend([ts[ts_length - h:ts_length] for ts, ts_length, h in zip(dataset.values, meta_length, horizons)])
+                values.extend([ts[ts_length - h:ts_length] for ts, ts_length, h in zip(dataset.values, meta_length, group_horizons)])
             else:
                 values.extend([ts[:ts_length] for ts, ts_length in zip(dataset.values, meta_length)])
 
