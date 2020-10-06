@@ -66,12 +66,19 @@ class M3Dataset:
     values: np.ndarray
 
     @staticmethod
-    def load(training: bool = True) -> 'M3Dataset':
+    def load(training: bool = True, validation: bool = True) -> 'M3Dataset':
         values_file = TRAINING_SET_CACHE_FILE_PATH if training else TEST_SET_CACHE_FILE_PATH
+        values = np.load(values_file, allow_pickle=True)
+        horizons = np.load(HORIZONS_CACHE_FILE_PATH, allow_pickle=True)
+        if training and validation:
+            values = np.array([v[:-horizons[i]] for i, v in enumerate(self.values)])
+        elif validation:
+            values = np.array([v[-horizons[i]:] for i, v in enumerate(self.values)])
+
         return M3Dataset(ids=np.load(IDS_CACHE_FILE_PATH, allow_pickle=True),
                          groups=np.load(GROUPS_CACHE_FILE_PATH, allow_pickle=True),
-                         horizons=np.load(HORIZONS_CACHE_FILE_PATH, allow_pickle=True),
-                         values=np.load(values_file, allow_pickle=True))
+                         horizons=horizons,
+                         values=values)
 
     def to_training_subset(self):
         return M3Dataset(ids=self.ids,
